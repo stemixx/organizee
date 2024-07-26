@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+   web:
+       # Берем Dockerfile из этой же папки и формируем контейнер web
+       build: .
+       container_name: organizee
+       # Открываем порт на хост машине и пробрасываем на такой же порт в контейнере
+       ports:
+           - "8000:8000"
+           - "5432:5432"
+       # Монтируем директорию проекта внутрь контейнера для отображения изменений внутри контейнера и наоборот
+       volumes:
+           - ./:/usr/src/app/
+       # Выполняем миграции,
+       # создаём суперпользователя по умолчанию,
+       # меняем url сайта на 127.0.0.1:8000,
+       # запускаем сервер
+       command: >
+           sh -c 'python manage.py makemigrations &&
+                  python manage.py migrate &&
+                  python manage.py create_default_superuser --no-input &&
+                  chmod +x change_site_name.sh &&
+                  ./change_site_name.sh &&
+                  python manage.py runserver 0.0.0.0:8000'
+       # Подключаем файл с переменными окружения
+       env_file:
+           - .env.dev
