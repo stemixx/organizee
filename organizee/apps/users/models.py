@@ -1,5 +1,4 @@
 from django.db import models
-from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
@@ -31,7 +30,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(_('email address'), max_length=100, unique=True)
-    username = models.CharField(_('username'), max_length=12, blank=True, unique=True)
+    username = models.CharField(_('id'), max_length=12, blank=True, unique=True)
     first_name = models.CharField(_('first name'), max_length=50, blank=True)
     last_name = models.CharField(_('last name'), max_length=50, blank=True)
     created_at = models.DateTimeField(_('created at'), auto_now_add=True)
