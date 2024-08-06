@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.exceptions import PermissionDenied
 from .models import Board
@@ -31,3 +32,7 @@ class BoardViewSet(viewsets.ModelViewSet):
         if instance.owner != self.request.user:
             raise PermissionDenied("You do not have permission to delete this board.")
         instance.delete()
+
+
+def boards_list_view(request):
+    return render(request, 'boards/boards_list.html')

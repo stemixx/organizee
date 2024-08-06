@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Board, BoardMember, CustomUser
+from .models import Board, BoardMember, CustomUser, Label
 
 
 class BoardMemberSerializer(serializers.ModelSerializer):
@@ -68,3 +68,9 @@ class BoardSerializer(serializers.ModelSerializer):
                 member.delete()
 
         return instance
+
+
+class LabelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Label
+        fields = ('id', 'name', 'color', 'board')

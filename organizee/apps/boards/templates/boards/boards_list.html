@@ -1,0 +1,73 @@
+<!-- тестовый шаблон отображения досок пользователя -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Доски пользователя</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #boards {
+            list-style-type: none;
+            padding: 0;
+        }
+        .board {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Мои доски</h1>
+    <ul id="boards"></ul>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // URL API для получения списка досок пользователя
+            const apiURL = 'http://127.0.0.1:8000/api/v1/boards';
+
+            // Функция для отображения списка досок
+            function displayBoards(boards) {
+                const boardsList = document.getElementById('boards');
+                boardsList.innerHTML = '';
+
+                boards.forEach(board => {
+                    const boardItem = document.createElement('li');
+                    boardItem.className = 'board';
+                    boardItem.innerHTML = `<h3>${board.name}</h3><p>${board.description}</p>`;
+                    boardsList.appendChild(boardItem);
+                });
+            }
+
+            // Функция для получения списка досок с API
+            async function fetchBoards() {
+                try {
+                    const response = await fetch(apiURL, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // Добавьте токен авторизации, если требуется
+                            //'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+
+                    const boards = await response.json();
+                    displayBoards(boards);
+                } catch (error) {
+                    console.error('There was a problem with the fetch operation:', error);
+                }
+            }
+
+            // Вызов функции для получения и отображения досок при загрузке страницы
+            fetchBoards();
+        });
+    </script>
+</body>
+</html>
