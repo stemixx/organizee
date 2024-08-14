@@ -7,7 +7,6 @@ services:
        # Открываем порт на хост машине и пробрасываем на такой же порт в контейнере
        ports:
            - "8000:8000"
-           - "5432:5432"
        # Монтируем директорию проекта внутрь контейнера для отображения изменений внутри контейнера и наоборот
        volumes:
            - ./:/usr/src/app/
@@ -25,3 +24,32 @@ services:
        # Подключаем файл с переменными окружения
        env_file:
            - .env.dev
+
+       # Вводим зависимость от базы данных
+       depends_on:
+           db:
+               # Вводим проверку доступности postgres
+               condition: service_healthy
+
+   db:
+       # Берём образ postgres из Docker Hub и создаём контейнер
+       image: postgres:16.3
+       container_name: postgres_organizee
+       # Создаём том pg_data в docker host и связываем его с контейнером для сохранения данных БД
+       volumes:
+           - pg_data:/var/lib/postgresql/data/
+       # Открываем порт на хост машине и пробрасываем на такой же порт в контейнере
+       ports:
+           - "5432:5432"
+       env_file:
+           - .env.dev
+       # Проверяем доступность БД перед стартом контейнера web
+       healthcheck:
+           test: ["CMD-SHELL", "pg_isready"]
+           interval: 5s
+           timeout: 5s
+           retries: 5
+
+# Создаём именованный том pg_data в docker host
+volumes:
+    pg_data:
