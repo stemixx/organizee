@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Создаём файл миграции изменения example.com на 127.0.0.1:8000
-cat <<EOF > /usr/src/app/organizee/migrations/0002_initial_site.py
+cat <<EOF > /usr/src/app/apps/boards/migrations/0002_initial_site.py
 from django.db import migrations
 
 
@@ -15,7 +15,7 @@ def add_site(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('organizee', '0001_initial')
+        ('boards', '0001_initial')
     ]
 
     operations = [
